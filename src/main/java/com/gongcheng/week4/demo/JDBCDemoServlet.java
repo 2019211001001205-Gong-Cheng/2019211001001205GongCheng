@@ -1,5 +1,7 @@
 package com.gongcheng.week4.demo;
 
+import org.junit.Test;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -19,8 +21,27 @@ import java.sql.ResultSet;
         },loadOnStartup = 1
 )
 
+
+
 public class JDBCDemoServlet extends HttpServlet {
     Connection con = null;
+
+
+    @Test
+    public  void test(){
+        String driver ="com.microsoft.sqlserver.jdbc.SQLServerDriver";
+        String url ="jdbc:sqlserver://localhost:1433;databaseName=usergc;";
+        String username ="sa";
+        String password ="123456";
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            System.out.println(connection);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+
     @Override
     public void init() throws ServletException{
 //        String driver ="com.microsoft.sqlserver.jdbc.SQLServerDriver";

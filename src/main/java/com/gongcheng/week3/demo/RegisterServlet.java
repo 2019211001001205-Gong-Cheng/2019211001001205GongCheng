@@ -10,6 +10,8 @@ import java.sql.*;
 public class RegisterServlet extends HttpServlet {
     public Connection dbConn;
     public void init() {
+
+
         try { Class.forName(getServletConfig().getServletContext().getInitParameter("driver"));
             dbConn = DriverManager.getConnection(getServletConfig().getServletContext().getInitParameter("url"), getServletConfig().getServletContext().getInitParameter("Username"), getServletConfig().getServletContext().getInitParameter("Password"));
         } catch (Exception e) {
@@ -20,28 +22,28 @@ public class RegisterServlet extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String id,username,password,email,gender,birthdate;
-        id = request.getParameter("id");username = request.getParameter("username");
+        String name,password,email,gender,date;
+        name = request.getParameter("name");
         password = request.getParameter("password");email = request.getParameter("email");
-        gender = request.getParameter("gender");birthdate = request.getParameter("birthdate");
+        gender = request.getParameter("gender");date = request.getParameter("date");
         PrintWriter writer = response.getWriter();
         String[][] r = new String[1000][6];
         int  a= 0;
         try {
             Statement createDbStatement = dbConn.createStatement();
-            String ADDdbRequire = "insert into usertable values('" + id + "','" + username + "','" + password + "','" + email + "','" + gender + "','" + birthdate + "')";
+            String ADDdbRequire = "insert into usertable values('" + name + "','" + password + "','" + email + "','" + gender + "','" + date + "')";
             createDbStatement.executeUpdate(ADDdbRequire);
-            String dbRequire = "select * from usertable";
-            ResultSet resultDb = createDbStatement.executeQuery(dbRequire);
-            while (resultDb.next()) {
-                r[a][0] = resultDb.getObject(1).toString().trim();r[a][1] = resultDb.getObject(2).toString().trim();
-                r[a][2] = resultDb.getObject(3).toString().trim();r[a][3] = resultDb.getObject(4).toString().trim();
-                r[a][4] = resultDb.getObject(5).toString().trim();r[a++][5] = resultDb.getObject(6).toString().trim();
-            }
+            //String dbRequire = "select * from usertable";
+            //ResultSet resultDb = createDbStatement.executeQuery(dbRequire);
+            //while (resultDb.next()) {
+            // r[a][0] = resultDb.getObject(1).toString().trim();r[a][1] = resultDb.getObject(2).toString().trim();
+            //r[a][2] = resultDb.getObject(3).toString().trim();r[a][3] = resultDb.getObject(4).toString().trim();
+            // r[a][4] = resultDb.getObject(5).toString().trim();r[a++][5] = resultDb.getObject(6).toString().trim();}
         } catch (Exception e) {
             System.out.println(e);
         }
-        writer.println("<table border=\"2\"width=\"80%\"borderColor=\"black\"><tr><td>ID</td><td>UserName</td><td>Password</td><td>Email</td><td>Gender</td><td>Birthdate</td></tr>");
-        for (int x = 0; x < a; x++) {for (int y = 0; y < 6; y++) { writer.println("<td>" + r[x][y] + "</td>");}
-            writer.println("</tr>"); }writer.println("</table>");
+        // writer.println("<table border=\"2\"width=\"80%\"borderColor=\"pink\"bgcolor=\"#DCE3F5\"><tr><td>ID</td><td>UserName</td><td>Password</td><td>Email</td><td>Gender</td><td>Birthdate</td></tr>");
+        // for (int x = 0; x < a; x++) {for (int y = 0; y < 6; y++) { writer.println("<td>" + r[x][y] + "</td>");}
+        // writer.println("</tr>"); }writer.println("</table>");
+        response.sendRedirect("login.jsp");
     }}

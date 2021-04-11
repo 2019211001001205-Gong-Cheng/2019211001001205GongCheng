@@ -5,13 +5,19 @@
   Time: 16:19
   To change this template use File | Settings | File Templates.
 --%>
-<%@include file="header.jsp"%>
-<p1>Login</p1>
+<%@include file="header.jsp" %>
+<h1>Login </h1> <br>
+<%
+    if(request.getAttribute("msg") != null)
+    {
+        out.println("<h3 style = 'color:red'>"+request.getAttribute("msg")+"</h3>");
+    }
+%>
+
 <form method="post" action="${pageContext.request.contextPath}/login">
-    <p>Username:<input type="text" name="username"/></p>
+    <p>Username:<input type="text" name="name"/></p>
+
     <p>Password:<input type="password" name="password"/></p>
-    <input type="submit",value="Login"/>
+    <input type="submit" value="Login"/>
 </form>
-
-
-<%@include file="footer.jsp"%>
+<%@include file="footer.jsp" %>
