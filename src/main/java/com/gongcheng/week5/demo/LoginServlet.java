@@ -1,68 +1,83 @@
 package com.gongcheng.week5.demo;
 
-import java.sql.PreparedStatement;
-import javax.servlet.*;
+import com.gongcheng.dao.UserDao;
+import com.gongcheng.model.User;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import java.applet.Applet;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-@WebServlet(name = "LoginServlet", value = "/login")
+import java.sql.*;
+
+@WebServlet(name = "LoginServlet",value = "/login")
 public class LoginServlet extends HttpServlet {
-    Connection con = null;
+    Connection con=null;
     @Override
     public void init() throws ServletException {
+        super.init();
 
-//    public Connection dbConn;
-//    public void init() {
-//        try { Class.forName(getServletConfig().getServletContext().getInitParameter("driver"));
-//            dbConn = DriverManager.getConnection(getServletConfig().getServletContext().getInitParameter("url"), getServletConfig().getServletContext().getInitParameter("Username"), getServletConfig().getServletContext().getInitParameter("Password"));
-//        } catch (Exception e) {
-//            System.out.println(e); }
-        con =(Connection)getServletContext().getAttribute("dbConn");
-//        System.out.println(con);
+        con=(Connection)getServletContext().getAttribute("con");
     }
 
-
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("WEB-INF/views/login.jsp").forward(req,resp);
     }
-    @Override
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String password= request.getParameter("password");
-        System.out.println(name + password);
-//        System.out.println(con);
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        PrintWriter out = resp.getWriter();
+        String username=req.getParameter("username");
+        String password=req.getParameter("password");
+
+        UserDao userDao=new UserDao();
+
         try {
-            if( con != null){
-                String sql = "SELECT * FROM usertable WHERE name=? AND password=?;";
-                PreparedStatement ps = con.prepareStatement(sql);
-                ps.setString(1,name);
-                ps.setString(2,password);
-                ResultSet rs = ps.executeQuery();
-                if(rs.next()){
-                    // writer.println("Login Success!!!");
-                    // writer.println("Welcome "+name+".");
-                    request.setAttribute("ID",rs.getInt("id"));
-                    request.setAttribute("Username",rs.getString("name"));
-                    request.setAttribute("Password",rs.getString("password"));
-                    request.setAttribute("Email",rs.getString("email"));
-                    request.setAttribute("Gender",rs.getString("gender"));
-                    request.setAttribute("Birthdate",rs.getDate("birthdate"));
-                    request.getRequestDispatcher("userinfo.jsp").forward(request, response);
-                }else{
-                    request.setAttribute("msg" ,"username or password Error");
-                    request.getRequestDispatcher("login.jsp").forward(request,response);
-                    //  writer.print("Username or Password Error!!!");
+            User user = userDao.findByUsernamePassword(con,username,password);
+            if (user!=null){
+                //valid login
+                //week8 code - demo - use cookie for session
+                //create cookie
+
+                //step 1:create an object of cookie class
+//                Cookie c = new Cookie("sessionid",""+user.getId());//sesionid = user-id
+               //step 2：set age of cookie
+//                c.setMaxAge(10*60);//in sec-10 min - 7 days - 7*24*60*60
+                //step3:add cookie into response
+//                resp.addCookie(c);
+                String rememberMe = req.getParameter("rememberMe");
+                if (rememberMe!=null && rememberMe.equals("1")){
+                    Cookie usernameCookie = new Cookie("cUsername",user.getUsername());
+                    Cookie passwordCookie = new Cookie("cPassword",user.getPassword());
+                    Cookie rememberMeCookie = new Cookie("cRememberMe",rememberMe);
+
+                    usernameCookie.setMaxAge(5);//5 sec - test --- 15 days
+                    passwordCookie.setMaxAge(5);
+                    rememberMeCookie.setMaxAge(5);
+
+                    resp.addCookie(usernameCookie);
+                    resp.addCookie(passwordCookie);
+                    resp.addCookie(rememberMeCookie);
 
                 }
+
+                HttpSession session=req.getSession();
+                System.out.println("session id-->"+session.getId());
+                session.setMaxInactiveInterval(10);
+
+                session.setAttribute("user",user);
+                req.getRequestDispatcher("WEB-INF/views/userInfo.jsp").forward(req,resp);
+            }else {
+                req.setAttribute("message","username or Password Error!!!");
+                req.getRequestDispatcher("WEB-INF/views/login.jsp").forward(req,resp);
             }
-        }catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
         }
+//catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
     }
 }

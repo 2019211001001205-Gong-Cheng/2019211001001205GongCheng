@@ -4,66 +4,14 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-    <servlet>
-        <servlet-name>anyName</servlet-name>
-        <servlet-class>com.gongcheng.week2.demo.HelloWorldServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>anyName</servlet-name>
-        <url-pattern>/hello</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>LifeCycleServlet</servlet-name>
-        <servlet-class>com.gongcheng.week3.demo.LifeCycleServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LifeCycleServlet</servlet-name>
-        <url-pattern>/life</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>com.gongcheng.week3.demo.RegisterServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>RegisterServlet</servlet-name>
-        <url-pattern>/register</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>ConfigDemoServlet</servlet-name>
-        <servlet-class>com.gongcheng.week4.demo.ConfigDemoServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>com.gongcheng.week5.demo.LoginServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>SearchServlet</servlet-name>
-        <servlet-class>com.gongcheng.week6.demo.SearchServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/login</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ConfigDemoServlet</servlet-name>
-        <url-pattern>/config</url-pattern>
-    </servlet-mapping>
-    <context-param>
-        <param-name>name</param-name>
-        <param-value>GongCheng</param-value>
-    </context-param>
-    <context-param>
-        <param-name>student-id</param-name>
-        <param-value>2019211001001205</param-value>
-    </context-param>
-
-
+<!--    <servlet>-->
+<!--        <servlet-name>anyName</servlet-name>-->
+<!--        <servlet-class>com.gongcheng.week2.demo.HelloWorldServlet</servlet-class>-->
+<!--    </servlet>-->
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>anyName</servlet-name>-->
+<!--        <url-pattern>/hello</url-pattern>-->
+<!--    </servlet-mapping>-->
 
 
     <context-param>
@@ -72,7 +20,7 @@
     </context-param>
     <context-param>
         <param-name>url</param-name>
-        <param-value>jdbc:sqlserver://localhost:1433;databaseName=usergc;</param-value>
+        <param-value>jdbc:sqlserver://localhost:1433;DatabaseName=userdb</param-value>
     </context-param>
     <context-param>
         <param-name>username</param-name>
@@ -83,5 +31,35 @@
         <param-value>123456</param-value>
     </context-param>
 
+    <welcome-file-list>
+        <welcome-file>home</welcome-file>
+    </welcome-file-list>
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.gongcheng.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/hello</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>HelloFilter</filter-name>
+        <filter-class>com.gongcheng.filter.HelloFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>HelloFilter</filter-name>
+        <url-pattern>/hello</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>LoggerFilter</filter-name>
+        <filter-class>com.gongcheng.filter.LoggerFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoggerFilter</filter-name>
+        <url-pattern>/hello</url-pattern>
+    </filter-mapping>
 
 </web-app>

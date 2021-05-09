@@ -5,32 +5,79 @@
   Time: 16:55
   To change this template use File | Settings | File Templates.
 --%>
-<%@include file="header.jsp" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+<%@include file="header.jsp" %>
 <head>
     <title>register</title>
+    <script>
+        function isPasswordValid() {
+            let password=document.getElementById("password").value;
+            if(password.length<8) {
+                alert("password lenth less than 8:，"+password.length+"/8");
+                document.getElementById("password").style.color="red";
+                return false;
+            }
+            document.getElementById("password").style.color="green";
+            return true;
+        }
+        function isMailValid(){
+            let x=document.getElementById("email").value;
+            let atpos=x.indexOf("@");
+            let dotpos=x.lastIndexOf(".");
+            if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length){
+                alert("e-mail format wrong");
+                document.getElementById("email").style.color="red";
+                return false;
+            }
+            document.getElementById("email").style.color="green";
+            return true;
+        }
+        function isDateValid() {
+            let obj=document.getElementById("birth");
+            let strDate = obj.value;
+            console.log(strDate+"-<")
+            let re = /^(\d{4})-(\d{2})-(\d{2})$/;
+            if (re.test(strDate))//判断日期格式符合YYYY-MM-DD标准
+            {
+                let dateElement = new Date(RegExp.$1, parseInt(RegExp.$2, 10) - 1, RegExp.$3);
+                if (!((dateElement.getFullYear() == parseInt(RegExp.$1)) && ((dateElement.getMonth() + 1) == parseInt(RegExp.$2, 10)) && (dateElement.getDate() == parseInt(RegExp.$3))))//判断日期逻辑
+                {
+                    alert("You can only input Date.(YYYY-MM-DD) !");
+                    document.getElementById("birth").style.color="red";
+                    return false;
+                }
+            } else {
+                alert("You can only input Date.(YYYY-MM-DD)!");
+                document.getElementById("birth").style.color="red";
+                return false;
+            }
+            document.getElementById("birth").style.color="green";
+            return true;
+        }
+        function checkAll() {
+            if(isDateValid()&&isMailValid()&&isPasswordValid()&&document.getElementById("username").value!=null&&document.getElementById("gender").value!=null) {
+                alert("提交成功")
+                return true;
+            }
+            alert("提交失败")
+            return false;
+        }
+    </script>
 </head>
-
-
 <body>
-<form method="post" action="register">
-    <span style="color: #FFA500"> This is my register JSP page</span><br/><br/>
-    <span style="color:#FFA500">Id</span> <input type="text" name="id" required="true" style="background-color: #EAEAAE"><br/><br/>
-    <span style="color:#FFA500">Username</span> <input type="text" name="name" required="true" style="background-color: #EAEAAE"><br/><br/>
-    <span style="color: #FFA500">Password</span> <input type="password" name="password" maxlength="8" style="background-color: #EAEAAE"><br/><br/>
-    <span style="color: #FFA500">Email</span><input type="email" name="email" required="true"style="background-color: #EAEAAE"><br/><br/>
-    <span style="color: #FFA500">Gender</span>
-    <label for="1">
-        <input type="radio" name="gender" value="male" id="1"/> <span style="color: #D2B48C">Male</span>
-    </label>
-
-    <label for="2">
-        <input type="radio" name="gender" value="female" id="2"/> <span style="color: #D2B48C">Female</span>
-    </label>
-    <br/><br/>
-    <span style="color: #FFA500">Date of birth(yyyy-mm-dd)</span><input type="date"name="date"  pattern="yyyy-mm-dd" required="true"style="background-color: #EAEAAE"><br/><br/>
-    <input type="submit" value="register"style="background-color: #EAEAAE">
+<br>This is my register page
+<h1>New User Registration!</h1>
+<form action="/register" method="post" onsubmit="checkAll()">
+    ID:<input type="text" id="id" name="id"><br>
+    Username:<input type="text" id="username" name="username"><br>
+    Password:<input type="password" id="password" name="password" onchange="isPasswordValid()"><br>
+    E-mail:<input type="email" id="email" name="email" onchange="isMailValid()"><br>
+    Gender:<input type="radio" name="gender" value="male">male
+    <input type="radio" name="gender" value="female">female<br>
+    Birth:<input type="text" id="birth" name="birth" onchange="isDateValid()"><br>
+    <input type="submit" value="Register">
 </form>
 </body>
 </html>
-<%@include file="footer.jsp" %>
+<%@ include file="footer.jsp"%>

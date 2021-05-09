@@ -13,9 +13,9 @@
     <%
         ResultSet rs = (ResultSet)request.getAttribute("rsname");
         while(rs.next()){
-            out.println("<tr><td>"+rs.getInt("id")+"</td><td>"+rs.getString("name")+"</td><td>"
+            System.out.println("<tr><td>"+rs.getString("id")+"</td><td>"+rs.getString("name")+"</td><td>"
                     +rs.getString("password")+"</td><td>"+rs.getString("email")+"</td><td>"
-                    +rs.getString("gender")+"</td><td>"+rs.getString("birthdate")+"</td></tr>");
+                    +rs.getString("gender")+"</td><td>"+rs.getString("birth")+"</td></tr>");
         }
     %>
 
