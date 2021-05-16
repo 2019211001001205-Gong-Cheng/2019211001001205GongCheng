@@ -2,6 +2,7 @@ package com.gongcheng.dao;
 
 import com.gongcheng.model.Product;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,12 +33,38 @@ public class ProductDao implements  IProductDao{
     }//end save
 
     @Override
-    public int delete(Integer productId, Connection con) {
+    public int delete(Integer productId, Connection con) throws SQLException {
+        int n = 0;
+        String sql = "delete from Product where ProductId=?";
+        PreparedStatement pt = con.prepareStatement(sql);
+        pt.setInt(1, productId);
+        n = pt.executeUpdate();
+        if (n > 0) {
+            return n;
+        }
         return 0;
     }
 
     @Override
-    public int update(Product instance, Connection con) {
+    public int update(Product instance, Connection con) throws SQLException {
+        int n = 0;
+        String sql = "update Product set ProductName=?,ProductDescription=?,Picture=?,price=?,CategoryID=? where ProductId=?";
+        PreparedStatement pt = con.prepareStatement(sql);
+        pt.setString(1, instance.getProductName());
+        pt.setString(2, instance.getProductDescription());
+        if(instance.getPicture()!=null) {
+            //for sql server
+//            pt.setBinaryStream(3, new ByteArrayInputStream(instance.getPicture().getBytes()));
+            //for mysql
+            //   pt.setBlob(3, product.getPicture());
+        }
+        pt.setDouble(4, instance.getPrice());
+        pt.setInt(5, instance.getCategoryId());
+        pt.setInt(6,instance.getProductId());
+        n = pt.executeUpdate();
+        if (n > 0) {
+            return n;
+        }
         return 0;
     }
 
