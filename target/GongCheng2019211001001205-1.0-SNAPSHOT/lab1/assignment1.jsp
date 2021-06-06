@@ -19,7 +19,7 @@
 
     <ul>
         <c:forEach var="i" begin="1" end="10">
-        <li>$${i}</li>
+        <li>${i}</li>
         </c:forEach>
     </ul>
     <%-- todo 1 : run assignement1.jsp  --%>
